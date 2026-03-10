@@ -32,30 +32,30 @@ $result = mysqli_query($conn,"SELECT * FROM products");
 
         <br><br>
 
-        <table>
+        <table style="width:100%; border-collapse:collapse;">
+
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>Action</th>
+                <th style="text-align:center; width:10%;">ID</th>
+                <th style="text-align:left; width:50%;">Name</th>
+                <th style="text-align:center; width:20%;">Price</th>
+                <th style="text-align:center; width:20%;">Action</th>
             </tr>
 
-            <?php while($row=mysqli_fetch_assoc($result)){ 
-                // Safe image path
-                $imagePath = '../images/' . $row['image'];
-                if(!file_exists($imagePath) || empty($row['image'])){
-                    $imagePath = '../images/default.png'; // fallback placeholder
-                }
-            ?>
+            <?php while($row=mysqli_fetch_assoc($result)){ ?>
             <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['product_name']) ?></td>
-                <td>₹<?= number_format($row['price'],2) ?></td>
-                <td>
-                    <img src="<?= $imagePath ?>" width="70" style="border-radius:8px;">
+                <td style="text-align:center;">
+                    <?= $row['id'] ?>
                 </td>
+
                 <td>
+                    <?= htmlspecialchars($row['product_name']) ?>
+                </td>
+
+                <td style="text-align:center;">
+                    ₹<?= number_format($row['price'],2) ?>
+                </td>
+
+                <td style="text-align:center;">
                     <a class="btn" href="delete_product.php?id=<?= $row['id'] ?>" 
                        onclick="return confirm('Delete this product?')">
                        Delete

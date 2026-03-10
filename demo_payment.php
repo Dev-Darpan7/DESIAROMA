@@ -10,14 +10,8 @@ if(!isset($_SESSION['demo_order_id'], $_SESSION['demo_total'])){
 $order_id = $_SESSION['demo_order_id'];
 $total = $_SESSION['demo_total'];
 
-/* YOUR UPI ID HERE */
 $upi_id = "yourupi@upi";
-
-/* UPI PAYMENT LINK */
 $upi_link = "upi://pay?pa=".$upi_id."&pn=DESIAROMA&am=".$total."&cu=INR";
-
-/* QR CODE GENERATOR */
-$qr_code = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=".urlencode($upi_link);
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +27,6 @@ font-family:Arial;
 background:#f5f5f5;
 }
 
-/* HEADER */
-
 header{
 background:#000;
 color:#ffd000;
@@ -44,10 +36,9 @@ font-weight:bold;
 text-align:center;
 }
 
-/* MAIN CONTAINER */
-
 .payment-container{
 width:1000px;
+height:520px;
 margin:40px auto;
 display:flex;
 background:white;
@@ -55,8 +46,6 @@ border-radius:10px;
 box-shadow:0 8px 25px rgba(0,0,0,0.15);
 overflow:hidden;
 }
-
-/* LEFT PANEL */
 
 .left-panel{
 width:30%;
@@ -73,12 +62,6 @@ border-radius:8px;
 margin-top:20px;
 }
 
-.summary h2{
-margin:5px 0;
-}
-
-/* PAYMENT METHODS */
-
 .middle-panel{
 width:30%;
 border-right:1px solid #eee;
@@ -86,21 +69,12 @@ padding:20px;
 }
 
 .payment-method{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:16px;
-border-radius:8px;
+padding:14px;
 border:1px solid #ddd;
+border-radius:8px;
 margin-bottom:12px;
 cursor:pointer;
-transition:0.25s;
-font-size:16px;
-}
-
-.payment-method:hover{
-background:#fff9d6;
-border-color:#ffd000;
+transition:0.2s;
 }
 
 .payment-method.active{
@@ -108,46 +82,27 @@ background:#fff3c4;
 border:2px solid #ffd000;
 }
 
-/* RIGHT PANEL */
-
 .right-panel{
 width:40%;
 padding:25px;
-min-height:380px;
+overflow-y:auto;
 }
-
-/* SECTIONS */
 
 .section{
 display:none;
-min-height:220px;
 }
 
 .section.active{
 display:block;
 }
 
-/* QR BOX */
-
-.qr-box{
-border:1px dashed #ccc;
-padding:25px;
-text-align:center;
-border-radius:8px;
-margin-bottom:15px;
-background:#fafafa;
-}
-
 input,select{
 width:100%;
-padding:11px;
+padding:10px;
 margin-top:10px;
 border:1px solid #ccc;
 border-radius:6px;
-font-size:14px;
 }
-
-/* PAY BUTTON */
 
 .pay-btn{
 background:#ffd000;
@@ -158,13 +113,22 @@ width:100%;
 border-radius:6px;
 font-weight:bold;
 cursor:pointer;
-font-size:15px;
-transition:0.2s;
 }
 
-.pay-btn:hover{
-background:#f2c800;
-transform:scale(1.02);
+.loader{
+display:none;
+text-align:center;
+margin-top:20px;
+font-weight:bold;
+}
+
+.otp-box{
+display:none;
+margin-top:15px;
+padding:15px;
+background:#f9f9f9;
+border:1px solid #ddd;
+border-radius:6px;
 }
 
 </style>
@@ -187,10 +151,108 @@ card.classList.remove("active");
 
 element.classList.add("active");
 
+document.getElementById("otpBox").style.display="none";
+
+let btn=document.querySelector(".pay-btn");
+btn.innerHTML="Pay Now";
+btn.disabled=false;
+
+document.getElementById("loader").style.display="none";
+
 }
 
-window.onload = function(){
+window.onload=function(){
 showSection('UPI','upi',document.getElementById('upiBtn'));
+}
+
+function processPayment(){
+
+let type=document.getElementById("payment_type").value;
+
+/* UPI */
+
+if(type==="UPI"){
+
+let upi=document.querySelector("input[name='upi_id']").value;
+
+if(upi.trim()===""){
+alert("Enter UPI ID");
+return false;
+}
+
+window.location.href="<?php echo $upi_link; ?>";
+return false;
+
+}
+
+/* CARD */
+
+if(type==="Card"){
+
+let card=document.querySelector("input[name='card_number']").value;
+let exp=document.querySelector("input[name='expiry']").value;
+let cvv=document.querySelector("input[name='cvv']").value;
+
+if(card.length < 16){
+alert("Enter valid card number");
+return false;
+}
+
+if(exp===""){
+alert("Enter expiry date");
+return false;
+}
+
+if(cvv.length < 3){
+alert("Enter valid CVV");
+return false;
+}
+
+document.getElementById("otpBox").style.display="block";
+document.getElementById("otp").focus();
+
+return false;
+
+}
+
+/* NETBANKING + WALLET */
+
+startProcessing();
+return false;
+
+}
+
+function verifyOTP(){
+
+let otp=document.getElementById("otp").value;
+
+if(otp==="123456"){
+
+startProcessing();
+
+}else{
+
+alert("Invalid OTP. Use 123456 for demo.");
+
+}
+
+}
+
+function startProcessing(){
+
+let btn=document.querySelector(".pay-btn");
+
+btn.innerHTML="Processing Payment...";
+btn.disabled=true;
+
+document.getElementById("loader").style.display="block";
+
+setTimeout(function(){
+
+document.getElementById("paymentForm").submit();
+
+},2000);
+
 }
 
 </script>
@@ -201,11 +263,9 @@ showSection('UPI','upi',document.getElementById('upiBtn'));
 
 <header>DESIAROMA</header>
 
-<form action="demo_payment_success.php" method="POST">
+<form id="paymentForm" action="demo_payment_success.php" method="POST" onsubmit="return processPayment();">
 
 <div class="payment-container">
-
-<!-- LEFT PANEL -->
 
 <div class="left-panel">
 
@@ -222,54 +282,29 @@ Order ID: <?php echo $order_id; ?>
 
 </div>
 
-<!-- PAYMENT METHODS -->
-
 <div class="middle-panel">
 
-<div class="payment-method" id="upiBtn" onclick="showSection('UPI','upi',this)">
-<span>UPI</span>
-</div>
-
-<div class="payment-method" onclick="showSection('Card','card',this)">
-<span>Cards</span>
-</div>
-
-<div class="payment-method" onclick="showSection('Netbanking','bank',this)">
-<span>Netbanking</span>
-</div>
-
-<div class="payment-method" onclick="showSection('Wallet','wallet',this)">
-<span>Wallet</span>
-</div>
+<div class="payment-method" id="upiBtn" onclick="showSection('UPI','upi',this)">UPI</div>
+<div class="payment-method" onclick="showSection('Card','card',this)">Cards</div>
+<div class="payment-method" onclick="showSection('Netbanking','bank',this)">Netbanking</div>
+<div class="payment-method" onclick="showSection('Wallet','wallet',this)">Wallet</div>
 
 <input type="hidden" name="payment_type" id="payment_type">
-
 <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
 <input type="hidden" name="total" value="<?php echo $total; ?>">
 
 </div>
 
-<!-- PAYMENT DETAILS -->
-
 <div class="right-panel">
 
 <h3>Payment Details</h3>
 
-<!-- UPI -->
-
 <div id="upi" class="section">
-
-<div class="qr-box">
-<img src="images/Qr.jpg" width="170">><br><br>
-Scan with any UPI App
-</div>
 
 Enter UPI ID
 <input type="text" name="upi_id" placeholder="example@upi">
 
 </div>
-
-<!-- CARD -->
 
 <div id="card" class="section">
 
@@ -282,9 +317,16 @@ Expiry
 CVV
 <input type="password" name="cvv" placeholder="123">
 
+<div id="otpBox" class="otp-box">
+
+Enter OTP (Demo OTP: 123456)
+<input type="text" id="otp" placeholder="6 digit OTP">
+
+<button type="button" onclick="verifyOTP()" class="pay-btn">Verify OTP</button>
+
 </div>
 
-<!-- BANK -->
+</div>
 
 <div id="bank" class="section">
 
@@ -298,8 +340,6 @@ Select Bank
 
 </div>
 
-<!-- WALLET -->
-
 <div id="wallet" class="section">
 
 Select Wallet
@@ -312,6 +352,10 @@ Select Wallet
 </div>
 
 <button class="pay-btn">Pay Now</button>
+
+<div id="loader" class="loader">
+Processing Payment...
+</div>
 
 </div>
 

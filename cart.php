@@ -29,6 +29,28 @@ if (isset($_POST['add_to_cart'])) {
     exit();
 }
 
+/* ========= INCREASE QUANTITY ========= */
+if (isset($_GET['plus'])) {
+    $id = intval($_GET['plus']);
+    $_SESSION['cart'][$id]++;
+    header("Location: cart.php");
+    exit();
+}
+
+/* ========= DECREASE QUANTITY ========= */
+if (isset($_GET['minus'])) {
+    $id = intval($_GET['minus']);
+
+    if ($_SESSION['cart'][$id] > 1) {
+        $_SESSION['cart'][$id]--;
+    } else {
+        unset($_SESSION['cart'][$id]);
+    }
+
+    header("Location: cart.php");
+    exit();
+}
+
 /* ========= REMOVE ITEM ========= */
 if (isset($_GET['remove'])) {
     $remove_id = intval($_GET['remove']);
@@ -60,76 +82,144 @@ if (!empty($_SESSION['cart'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cart - DESIAROMA</title>
-    <link rel="stylesheet" href="style.css">
+<title>Cart - DESIAROMA</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.qty-box{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.qty-btn{
+background:#111;
+color:white;
+padding:5px 10px;
+text-decoration:none;
+border-radius:4px;
+font-weight:bold;
+}
+
+.qty-btn:hover{
+background:gold;
+color:black;
+}
+
+.remove-btn{
+color:red;
+text-decoration:none;
+}
+
+</style>
+
 </head>
 <body>
 
-<!-- ===== HEADER SAME AS INDEX ===== -->
 <header>
-    <div class="logo">DESIAROMA</div>
-    <nav>
-        <ul>
-            <li><a href="index.php">Home</a></li>
+<div class="logo">DESIAROMA</div>
 
-            <?php if(isset($_SESSION['user_id'])): ?>
-                <li style="color:gold;">Hello, <?php echo $_SESSION['user_name']; ?></li>
-                   <li><a href="orders.php">My Orders</a></li>
-                <li><a href="logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-                <li><a href="register.php">Register</a></li>
-            <?php endif; ?>
-        </ul>
-    </nav>
+<nav>
+<ul>
+
+<li><a href="index.php">Home</a></li>
+<li><a href="shop.php">Shop</a></li>
+
+<?php if(isset($_SESSION['user_id'])): ?>
+
+<li style="color:gold;">Hello <?php echo $_SESSION['user_name']; ?></li>
+
+<li>
+<a href="profile.php?tab=orders">My Orders</a>
+</li>
+
+<li><a href="logout.php">Logout</a></li>
+
+<?php else: ?>
+
+<li><a href="login.php">Login</a></li>
+<li><a href="register.php">Register</a></li>
+
+<?php endif; ?>
+
+</ul>
+</nav>
 </header>
 
-<!-- ===== CART SECTION ===== -->
+
 <section class="cart-section">
-    <div class="cart-box">
 
-        <h2>Your Cart</h2>
+<div class="cart-box">
 
-        <?php if(empty($products_in_cart)): ?>
-            <p>Your cart is empty. <a href="index.php">Shop Now</a></p>
+<h2>Your Cart</h2>
 
-        <?php else: ?>
+<?php if(empty($products_in_cart)): ?>
 
-        <table>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Subtotal</th>
-                <th>Action</th>
-            </tr>
+<p>Your cart is empty. <a href="shop.php">Shop Now</a></p>
 
-            <?php foreach($products_in_cart as $product): ?>
-            <tr>
-                <td><?php echo $product['product_name']; ?></td>
-                <td>₹<?php echo $product['price']; ?></td>
-                <td><?php echo $product['quantity']; ?></td>
-                <td>₹<?php echo $product['subtotal']; ?></td>
-                <td>
-                    <a href="cart.php?remove=<?php echo $product['id']; ?>" class="remove-btn">Remove</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
+<?php else: ?>
 
-            <tr>
-                <th colspan="3">Total</th>
-                <th>₹<?php echo $total_price; ?></th>
-                <th></th>
-            </tr>
-        </table>
+<table>
 
-        <form action="checkout.php" method="POST">
-            <button class="checkout-btn">Proceed to Checkout</button>
-        </form>
+<tr>
+<th>Product</th>
+<th>Price</th>
+<th>Qty</th>
+<th>Subtotal</th>
+<th>Action</th>
+</tr>
 
-        <?php endif; ?>
+<?php foreach($products_in_cart as $product): ?>
 
-    </div>
+<tr>
+
+<td><?php echo $product['product_name']; ?></td>
+
+<td>₹<?php echo $product['price']; ?></td>
+
+<td>
+
+<div class="qty-box">
+
+<a class="qty-btn" href="cart.php?minus=<?php echo $product['id']; ?>">−</a>
+
+<span><?php echo $product['quantity']; ?></span>
+
+<a class="qty-btn" href="cart.php?plus=<?php echo $product['id']; ?>">+</a>
+
+</div>
+
+</td>
+
+<td>₹<?php echo $product['subtotal']; ?></td>
+
+<td>
+<a href="cart.php?remove=<?php echo $product['id']; ?>" class="remove-btn">
+Remove
+</a>
+</td>
+
+</tr>
+
+<?php endforeach; ?>
+
+<tr>
+<th colspan="3">Total</th>
+<th>₹<?php echo $total_price; ?></th>
+<th></th>
+</tr>
+
+</table>
+
+<form action="checkout.php" method="POST">
+<button class="checkout-btn">Proceed to Checkout</button>
+</form>
+
+<?php endif; ?>
+
+</div>
+
 </section>
 
 </body>

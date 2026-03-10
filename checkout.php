@@ -73,12 +73,11 @@ if(isset($_POST['place_order'])){
         $success = true;
     }
 
-    // 🔹 CHANGED: Redirect to demo payment page instead of Razorpay
     if($payment_method == "ONLINE"){
         $_SESSION['demo_order_id'] = $order_id;
         $_SESSION['demo_total'] = $total_price;
 
-        header("Location: demo_payment.php"); // <-- new demo payment page
+        header("Location: demo_payment.php");
         exit();
     }
 }
@@ -86,13 +85,53 @@ if(isset($_POST['place_order'])){
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Checkout - DESIAROMA</title>
-    <link rel="stylesheet" href="style.css">
+<title>Checkout - DESIAROMA</title>
+<link rel="stylesheet" href="style.css">
+<style>
+
+/* Make checkout container smaller */
+.cart-box{
+max-width:680px !important;
+padding:25px !important;
+}
+
+/* Smaller title */
+.cart-box h2{
+font-size:28px !important;
+margin-bottom:20px !important;
+}
+
+/* Compact table */
+.cart-box table th,
+.cart-box table td{
+padding:8px 10px !important;
+font-size:14px !important;
+}
+
+/* Smaller payment box */
+.payment-box{
+padding:18px !important;
+margin-top:15px !important;
+}
+
+/* Smaller checkout button */
+.checkout-btn{
+padding:10px 22px !important;
+font-size:14px !important;
+}
+
+/* Reduce spacing */
+.cart-section{
+padding:40px 15px !important;
+}
+
+</style>
 </head>
+
 <body>
 
 <header>
-    <div class="logo">DESIAROMA</div>
+<div class="logo">DESIAROMA</div>
 </header>
 
 <section class="cart-section">
@@ -102,88 +141,89 @@ if(isset($_POST['place_order'])){
 
 <?php if(isset($success)): ?>
 
-    <p style="color:lightgreen;font-size:20px;">
-        🎉 Your order has been placed successfully!
-    </p>
+<p style="color:lightgreen;font-size:20px;">
+🎉 Your order has been placed successfully!
+</p>
 
-    <br>
-    <a href="index.php" class="checkout-btn">Continue Shopping</a>
+<br>
+
+<a href="index.php" class="checkout-btn">Continue Shopping</a>
 
 <?php else: ?>
 
-<!-- Display Shipping Address -->
+<!-- Shipping Address -->
 <?php if($user): ?>
-<div style="border:1px solid #c39f77; padding:20px; margin-bottom:20px; border-radius:8px; background:#fff8f0; box-shadow: 0 2px 6px rgba(0,0,0,0.05); color:#333;">
-    <h3 style="color:#b35400;">Shipping Address</h3>
-    <p><strong><?php echo htmlspecialchars($user['name'] ?? 'N/A'); ?></strong></p>
-    <p><?php echo htmlspecialchars($user['address'] ?? 'N/A'); ?></p>
-    <p>
-        <?php echo htmlspecialchars($user['city'] ?? ''); ?>
-        <?php echo (!empty($user['city']) && !empty($user['state'])) ? ',' : ''; ?>
-        <?php echo htmlspecialchars($user['state'] ?? ''); ?>
-        <?php echo htmlspecialchars($user['pincode'] ?? ''); ?>
-    </p>
-    <p>Phone: <?php echo htmlspecialchars($user['phone'] ?? 'N/A'); ?></p>
+<div class="payment-box">
+
+<h3>Shipping Address</h3>
+
+<p><strong><?php echo htmlspecialchars($user['name'] ?? 'N/A'); ?></strong></p>
+
+<p><?php echo htmlspecialchars($user['address'] ?? 'N/A'); ?></p>
+
+<p>
+<?php echo htmlspecialchars($user['city'] ?? ''); ?>
+<?php echo (!empty($user['city']) && !empty($user['state'])) ? ',' : ''; ?>
+<?php echo htmlspecialchars($user['state'] ?? ''); ?>
+<?php echo htmlspecialchars($user['pincode'] ?? ''); ?>
+</p>
+
+<p>Phone: <?php echo htmlspecialchars($user['phone'] ?? 'N/A'); ?></p>
+
 </div>
 <?php endif; ?>
 
 <table>
+
 <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Qty</th>
-    <th>Total</th>
+<th>Product</th>
+<th>Price</th>
+<th>Qty</th>
+<th>Total</th>
 </tr>
 
 <?php foreach($products as $p): ?>
+
 <tr>
-    <td><?php echo htmlspecialchars($p['product_name']); ?></td>
-    <td>₹<?php echo number_format($p['price'],2); ?></td>
-    <td><?php echo $p['qty']; ?></td>
-    <td>₹<?php echo number_format($p['subtotal'],2); ?></td>
+<td><?php echo htmlspecialchars($p['product_name']); ?></td>
+<td>₹<?php echo number_format($p['price'],2); ?></td>
+<td><?php echo $p['qty']; ?></td>
+<td>₹<?php echo number_format($p['subtotal'],2); ?></td>
 </tr>
+
 <?php endforeach; ?>
 
 <tr>
-    <th colspan="3">Grand Total</th>
-    <th>₹<?php echo number_format($total_price,2); ?></th>
+<th colspan="3">Grand Total</th>
+<th>₹<?php echo number_format($total_price,2); ?></th>
 </tr>
+
 </table>
 
 <br>
 
 <form method="POST">
 
+<div class="payment-box">
+
 <h3>Select Payment Method</h3>
 
-<div style="display:flex; flex-direction:column; gap:15px; margin-top:15px;">
+<label class="payment-option">
+<input type="radio" name="payment_method" value="COD" required>
+Cash on Delivery
+</label>
 
-    <!-- Cash on Delivery Card -->
-    <label style="border:1px solid #c39f77; border-radius:8px; padding:15px; background:#fff8f0; cursor:pointer; transition:0.2s; display:flex; align-items:center;">
-        <input type="radio" name="payment_method" value="COD" required style="margin-right:15px; transform:scale(1.2);">
-        <span style="font-weight:500; color:#333;">Cash on Delivery</span>
-    </label>
-
-    <!-- Online Payment Card -->
-    <label style="border:1px solid #c39f77; border-radius:8px; padding:15px; background:#fff8f0; cursor:pointer; transition:0.2s; display:flex; align-items:center;">
-        <input type="radio" name="payment_method" value="ONLINE" required style="margin-right:15px; transform:scale(1.2);">
-        <span style="font-weight:500; color:#333;">Pay Online (UPI / Card / NetBanking)</span>
-    </label>
+<label class="payment-option">
+<input type="radio" name="payment_method" value="ONLINE" required>
+Pay Online (UPI / Card / NetBanking)
+</label>
 
 </div>
 
-<style>
-    /* Hover effect for payment cards */
-    label:hover {
-        background:#fdf1e6;
-        border-color:#b35400;
-    }
-</style>
-
-<br><br>
+<br>
 
 <button class="checkout-btn" name="place_order">
-    Confirm Order
+Confirm Order
 </button>
 
 </form>
