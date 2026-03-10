@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2026 at 05:49 AM
+-- Generation Time: Mar 10, 2026 at 04:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -91,51 +91,69 @@ CREATE TABLE `orders` (
   `total_price` decimal(10,2) NOT NULL,
   `payment_status` varchar(20) DEFAULT 'Pending',
   `payment_id` varchar(100) DEFAULT NULL,
-  `payment_method` varchar(50) DEFAULT NULL
+  `payment_method` varchar(50) DEFAULT NULL,
+  `status` varchar(30) DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `order_status`, `order_date`, `total_price`, `payment_status`, `payment_id`, `payment_method`) VALUES
-(1, 1, 5997.00, 'Pending', '2026-02-18 05:12:00', 5997.00, 'Pending', NULL, NULL),
-(2, 1, 5997.00, 'Pending', '2026-02-18 05:12:03', 5997.00, 'Pending', NULL, NULL),
-(3, 1, 5997.00, 'Pending', '2026-02-18 05:12:24', 5997.00, 'Pending', NULL, NULL),
-(4, 1, 5997.00, 'Pending', '2026-02-18 05:13:05', 5997.00, 'Pending', NULL, NULL),
-(5, 1, 999.00, 'Pending', '2026-02-18 05:13:13', 999.00, 'Pending', NULL, NULL),
-(6, 1, 999.00, 'Pending', '2026-02-18 05:15:33', 999.00, 'Pending', NULL, NULL),
-(7, 1, 2499.00, 'Completed', '2026-02-18 05:30:11', 2499.00, 'Pending', NULL, NULL),
-(8, 1, 5599.00, 'Pending', '2026-02-18 05:53:24', 5599.00, 'Pending', NULL, NULL),
-(9, 1, 4399.00, 'Pending', '2026-02-18 06:36:21', 4399.00, 'Pending', NULL, NULL),
-(10, 4, 2399.00, 'Pending', '2026-02-26 08:59:16', 2399.00, 'Pending', NULL, NULL),
-(11, 4, 2199.00, 'Pending', '2026-02-26 09:09:43', 2199.00, 'Pending', NULL, NULL),
-(12, 4, 2199.00, 'Pending', '2026-02-26 10:02:43', 2199.00, 'Pending', NULL, NULL),
-(13, 4, 2000.00, 'Pending', '2026-02-26 11:32:28', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(14, 4, 2000.00, 'Pending', '2026-02-26 11:33:20', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(15, 4, 2000.00, 'Pending', '2026-02-26 11:36:44', 2000.00, 'Pending', NULL, 'COD'),
-(16, 4, 1599.00, 'Pending', '2026-02-26 11:38:54', 1599.00, 'Pending', NULL, 'COD'),
-(17, 4, 2199.00, 'Pending', '2026-02-26 11:44:31', 2199.00, 'Initiated', NULL, 'ONLINE'),
-(18, 4, 4199.00, 'Pending', '2026-02-26 12:06:57', 4199.00, 'Initiated', NULL, 'ONLINE'),
-(19, 4, 2399.00, 'Pending', '2026-02-27 03:54:44', 2399.00, 'Pending', NULL, 'COD'),
-(20, 4, 4000.00, 'Pending', '2026-02-27 04:20:01', 4000.00, 'Pending', NULL, 'COD'),
-(21, 4, 2000.00, 'Pending', '2026-02-27 04:22:55', 2000.00, 'Pending', NULL, 'COD'),
-(22, 4, 2000.00, 'Pending', '2026-02-27 05:07:17', 2000.00, 'Pending', NULL, 'COD'),
-(23, 4, 2000.00, 'Pending', '2026-02-27 05:07:31', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(24, 4, 2000.00, 'Pending', '2026-02-27 05:08:41', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(25, 4, 2000.00, 'Confirmed', '2026-02-27 05:11:14', 2000.00, 'Paid', 'TESTPAY123', 'Online'),
-(26, 4, 2000.00, 'Pending', '2026-02-27 05:43:33', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(27, 4, 4000.00, 'Pending', '2026-02-27 05:47:40', 4000.00, 'Initiated', NULL, 'ONLINE'),
-(28, 4, 4000.00, 'Pending', '2026-02-27 05:47:58', 4000.00, 'Initiated', NULL, 'ONLINE'),
-(29, 4, 4000.00, 'Pending', '2026-02-27 05:51:21', 4000.00, 'Initiated', NULL, 'ONLINE'),
-(30, 4, 6000.00, 'Pending', '2026-02-27 05:51:40', 6000.00, 'Initiated', NULL, 'ONLINE'),
-(31, 4, 6000.00, 'Confirmed', '2026-02-27 05:54:27', 6000.00, 'Paid', NULL, 'UPI'),
-(32, 1, 2000.00, 'Pending', '2026-03-06 04:21:59', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(33, 1, 4199.00, 'Pending', '2026-03-06 04:48:29', 4199.00, 'Pending', NULL, 'COD'),
-(34, 1, 2000.00, 'Pending', '2026-03-06 04:51:51', 2000.00, 'Pending', NULL, 'COD'),
-(35, 1, 2000.00, 'Pending', '2026-03-06 04:51:58', 2000.00, 'Initiated', NULL, 'ONLINE'),
-(36, 1, 4000.00, 'Pending', '2026-03-06 05:11:52', 4000.00, 'Initiated', NULL, 'ONLINE'),
-(37, 1, 2000.00, 'Pending', '2026-03-07 03:30:22', 2000.00, 'Initiated', NULL, 'ONLINE');
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `order_status`, `order_date`, `total_price`, `payment_status`, `payment_id`, `payment_method`, `status`, `created_at`) VALUES
+(1, 1, 5997.00, 'Pending', '2026-02-18 05:12:00', 5997.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(2, 1, 5997.00, 'Pending', '2026-02-18 05:12:03', 5997.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(3, 1, 5997.00, 'Pending', '2026-02-18 05:12:24', 5997.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(4, 1, 5997.00, 'Pending', '2026-02-18 05:13:05', 5997.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(5, 1, 999.00, 'Pending', '2026-02-18 05:13:13', 999.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(6, 1, 999.00, 'Pending', '2026-02-18 05:15:33', 999.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(7, 1, 2499.00, 'Completed', '2026-02-18 05:30:11', 2499.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(8, 1, 5599.00, 'Pending', '2026-02-18 05:53:24', 5599.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(9, 1, 4399.00, 'Pending', '2026-02-18 06:36:21', 4399.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(10, 4, 2399.00, 'Pending', '2026-02-26 08:59:16', 2399.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(11, 4, 2199.00, 'Pending', '2026-02-26 09:09:43', 2199.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(12, 4, 2199.00, 'Pending', '2026-02-26 10:02:43', 2199.00, 'Pending', NULL, NULL, 'pending', '2026-03-07 11:25:12'),
+(13, 4, 2000.00, 'Pending', '2026-02-26 11:32:28', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(14, 4, 2000.00, 'Pending', '2026-02-26 11:33:20', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(15, 4, 2000.00, 'Pending', '2026-02-26 11:36:44', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(16, 4, 1599.00, 'Pending', '2026-02-26 11:38:54', 1599.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(17, 4, 2199.00, 'Pending', '2026-02-26 11:44:31', 2199.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(18, 4, 4199.00, 'Pending', '2026-02-26 12:06:57', 4199.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(19, 4, 2399.00, 'Pending', '2026-02-27 03:54:44', 2399.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(20, 4, 4000.00, 'Pending', '2026-02-27 04:20:01', 4000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(21, 4, 2000.00, 'Pending', '2026-02-27 04:22:55', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(22, 4, 2000.00, 'Pending', '2026-02-27 05:07:17', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(23, 4, 2000.00, 'Pending', '2026-02-27 05:07:31', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(24, 4, 2000.00, 'Pending', '2026-02-27 05:08:41', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(25, 4, 2000.00, 'Confirmed', '2026-02-27 05:11:14', 2000.00, 'Paid', 'TESTPAY123', 'Online', 'pending', '2026-03-07 11:25:12'),
+(26, 4, 2000.00, 'Pending', '2026-02-27 05:43:33', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(27, 4, 4000.00, 'Pending', '2026-02-27 05:47:40', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(28, 4, 4000.00, 'Pending', '2026-02-27 05:47:58', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(29, 4, 4000.00, 'Pending', '2026-02-27 05:51:21', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(30, 4, 6000.00, 'Pending', '2026-02-27 05:51:40', 6000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(31, 4, 6000.00, 'Confirmed', '2026-02-27 05:54:27', 6000.00, 'Paid', NULL, 'UPI', 'pending', '2026-03-07 11:25:12'),
+(32, 1, 2000.00, 'Pending', '2026-03-06 04:21:59', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(33, 1, 4199.00, 'Pending', '2026-03-06 04:48:29', 4199.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(34, 1, 2000.00, 'Pending', '2026-03-06 04:51:51', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-07 11:25:12'),
+(35, 1, 2000.00, 'Pending', '2026-03-06 04:51:58', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(36, 1, 4000.00, 'Pending', '2026-03-06 05:11:52', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(37, 1, 2000.00, 'Completed', '2026-03-07 03:30:22', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(38, 1, 2000.00, 'Completed', '2026-03-07 10:28:07', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-07 11:25:12'),
+(39, 1, 2000.00, 'Pending', '2026-03-08 08:17:22', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-08 08:17:22'),
+(40, 1, 2000.00, 'Pending', '2026-03-08 08:27:43', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 08:27:43'),
+(41, 1, 4000.00, 'Pending', '2026-03-08 08:34:46', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 08:34:46'),
+(42, 1, 4000.00, 'Pending', '2026-03-08 08:34:57', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 08:34:57'),
+(43, 1, 4000.00, 'Pending', '2026-03-08 08:36:31', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 08:36:31'),
+(44, 1, 4000.00, 'Pending', '2026-03-08 08:36:57', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 08:36:57'),
+(45, 1, 6000.00, 'Pending', '2026-03-08 09:56:36', 6000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 09:56:36'),
+(46, 1, 14399.00, 'Pending', '2026-03-08 11:32:19', 14399.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-08 11:32:19'),
+(47, 1, 2399.00, 'Pending', '2026-03-08 11:38:20', 2399.00, 'Pending', NULL, 'COD', 'pending', '2026-03-08 11:38:20'),
+(48, 1, 2199.00, 'Pending', '2026-03-09 17:15:34', 2199.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-09 17:15:34'),
+(49, 1, 4000.00, 'Pending', '2026-03-09 17:51:29', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-09 17:51:29'),
+(50, 1, 4000.00, 'Pending', '2026-03-09 18:07:59', 4000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-09 18:07:59'),
+(51, 1, 4000.00, 'Pending', '2026-03-09 18:13:19', 4000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-09 18:13:19'),
+(52, 1, 2000.00, 'Pending', '2026-03-09 18:22:52', 2000.00, 'Pending', NULL, 'COD', 'pending', '2026-03-09 18:22:52'),
+(53, 1, 2000.00, 'Pending', '2026-03-10 03:15:49', 2000.00, 'Initiated', NULL, 'ONLINE', 'pending', '2026-03-10 03:15:49');
 
 -- --------------------------------------------------------
 
@@ -194,7 +212,24 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (36, 34, 11, 1, 2000.00),
 (37, 35, 11, 1, 2000.00),
 (38, 36, 11, 2, 2000.00),
-(39, 37, 11, 1, 2000.00);
+(39, 37, 11, 1, 2000.00),
+(40, 38, 11, 1, 2000.00),
+(41, 39, 11, 1, 2000.00),
+(42, 40, 11, 1, 2000.00),
+(43, 41, 11, 2, 2000.00),
+(44, 42, 11, 2, 2000.00),
+(45, 43, 11, 2, 2000.00),
+(46, 44, 11, 2, 2000.00),
+(47, 45, 11, 3, 2000.00),
+(48, 46, 11, 6, 2000.00),
+(49, 46, 12, 1, 2399.00),
+(50, 47, 12, 1, 2399.00),
+(51, 48, 10, 1, 2199.00),
+(52, 49, 11, 2, 2000.00),
+(53, 50, 11, 2, 2000.00),
+(54, 51, 11, 2, 2000.00),
+(55, 52, 11, 1, 2000.00),
+(56, 53, 11, 1, 2000.00);
 
 -- --------------------------------------------------------
 
@@ -248,7 +283,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `phone`, `address`, `pincode`) VALUES
-(1, 'darpan', 'imposterrr@gmail.com', '$2y$10$6X7nAilwY242OkZ2MsvhWukjJ9BKKKxKpRct3jsIGAp9fjr4vE/yK', '2026-02-11 13:36:17', NULL, NULL, NULL),
+(1, 'darpan', 'imposterrr@gmail.com', '$2y$10$UVeqrFl59YXsTQtSsWK7Pe.QLrr/rp3Y8Ll5LO6l07LXoyB/JW0.q', '2026-02-11 13:36:17', '93355584', 'idhar bajuu me\r\n', '421501'),
 (2, 'Lithesh', 'litheshborade999@gmail.com', '$2y$10$N.2JF8rH2KjYvhfe/JJWCeK6u7XSXVBoEFhHwGoFV3X1SItUTYtw.', '2026-02-12 18:08:46', NULL, NULL, NULL),
 (3, 'LITHESH', 'lizzborade07@gmail.com', '$2y$10$t1wjR9HSwco619aWCi14juaQD9kCzeUTvxAaWNRfHRo/kkIbssfFe', '2026-02-17 13:06:19', NULL, NULL, NULL),
 (4, 'LITHESH', 'lithesh11@gmail.com', '$2y$10$7BOyUVDWXQUUaewgJ5DTjuaTtqNB1kYBBivOSl5bi2vpkXMIRJgK.', '2026-02-26 08:58:48', '7039368108', 'KANCHAN NIWAS NR GANPATI MANDIR SITARAM NAGAR MARATHA SECTION 32 ULHASNAGAR 4', '421004');
@@ -331,13 +366,13 @@ ALTER TABLE `contact_messages`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `products`
