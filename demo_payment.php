@@ -10,8 +10,13 @@ if(!isset($_SESSION['demo_order_id'], $_SESSION['demo_total'])){
 $order_id = $_SESSION['demo_order_id'];
 $total = $_SESSION['demo_total'];
 
-$upi_id = "yourupi@upi";
-$upi_link = "upi://pay?pa=".$upi_id."&pn=DESIAROMA&am=".$total."&cu=INR";
+$upi_id = "yourupi@ybl"; // Fake UPI
+$upi_name = "DESIAROMA";
+// Using UPILINK format: upi://pay?pa=UPI_ID&pn=NAME&am=AMOUNT
+$upi_link = "upi://pay?pa=".$upi_id."&pn=".$upi_name."&am=".$total."&cu=INR";
+
+// Generate QR Code URL using free API
+$qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($upi_link);
 ?>
 
 <!DOCTYPE html>
@@ -131,6 +136,99 @@ border:1px solid #ddd;
 border-radius:6px;
 }
 
+/* REALISTIC UPI STYLES */
+.upi-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.upi-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: #eee;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.upi-tab.active {
+    background: #ffd000;
+    color: #000;
+}
+.upi-content {
+    display: none;
+}
+.upi-content.active {
+    display: block;
+    text-align: center;
+}
+.qr-box {
+    margin: 15px auto;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.qr-box img {
+    width: 180px;
+    height: 180px;
+}
+.upi-apps {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+.upi-app {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ADDED FULLSCREEN LOADER FOR IMPRESSIVE DEMO */
+.overlay-loader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ffd000;
+    backdrop-filter: blur(8px);
+}
+
+.spinner {
+    width: 70px;
+    height: 70px;
+    border: 6px solid rgba(255,208,0,0.2);
+    border-top-color: #ffd000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 25px;
+    transition: 0.3s;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.loading-text {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+}
+
 </style>
 
 <script>
@@ -165,6 +263,14 @@ window.onload=function(){
 showSection('UPI','upi',document.getElementById('upiBtn'));
 }
 
+function showUpiTab(tabId, element) {
+    document.querySelectorAll('.upi-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.upi-content').forEach(c => c.classList.remove('active'));
+    
+    element.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
 function processPayment(){
 
 let type=document.getElementById("payment_type").value;
@@ -172,16 +278,21 @@ let type=document.getElementById("payment_type").value;
 /* UPI */
 
 if(type==="UPI"){
-
-let upi=document.querySelector("input[name='upi_id']").value;
-
-if(upi.trim()===""){
-alert("Enter UPI ID");
-return false;
-}
-
-window.location.href="<?php echo $upi_link; ?>";
-return false;
+    
+    // Check which tab is active
+    let activeTab = document.querySelector(".upi-tab.active").innerText;
+    
+    if(activeTab === "Enter UPI ID") {
+        let upi=document.querySelector("input[name='upi_id']").value;
+        if(upi.trim()===""){
+            alert("Please enter a valid UPI ID (e.g. name@okhdfcbank)");
+            return false;
+        }
+    }
+    
+    // Instead of forcing mobile app open, we show the processing animation
+    startProcessing();
+    return false;
 
 }
 
@@ -194,7 +305,7 @@ let exp=document.querySelector("input[name='expiry']").value;
 let cvv=document.querySelector("input[name='cvv']").value;
 
 if(card.length < 16){
-alert("Enter valid card number");
+alert("Enter valid 16-digit card number");
 return false;
 }
 
@@ -241,17 +352,30 @@ alert("Invalid OTP. Use 123456 for demo.");
 function startProcessing(){
 
 let btn=document.querySelector(".pay-btn");
-
-btn.innerHTML="Processing Payment...";
 btn.disabled=true;
 
-document.getElementById("loader").style.display="block";
+let overlay = document.getElementById("overlayLoader");
+let text = document.getElementById("loadingText");
+let spinner = document.querySelector(".spinner");
+
+overlay.style.display = "flex";
+
+text.innerText = "Initiating Secure Connection...";
+
+setTimeout(() => { text.innerText = "Connecting to Bank Gateway..."; }, 1500);
+setTimeout(() => { text.innerText = "Verifying Payment Details..."; }, 3000);
+setTimeout(() => { text.innerText = "Authorizing Transaction..."; }, 4500);
+
+setTimeout(() => { 
+    text.innerText = "Payment Approved! Redirecting..."; 
+    text.style.color = "#00ff88"; // Success Green
+    spinner.style.borderTopColor = "#00ff88";
+    spinner.style.borderColor = "rgba(0, 255, 136, 0.2)";
+}, 6000);
 
 setTimeout(function(){
-
-document.getElementById("paymentForm").submit();
-
-},2000);
+    document.getElementById("paymentForm").submit();
+}, 7500);
 
 }
 
@@ -260,6 +384,12 @@ document.getElementById("paymentForm").submit();
 </head>
 
 <body>
+
+<!-- FULLSCREEN ANIMATED LOADER -->
+<div id="overlayLoader" class="overlay-loader">
+    <div class="spinner"></div>
+    <div id="loadingText" class="loading-text">Processing Payment...</div>
+</div>
 
 <header>DESIAROMA</header>
 
@@ -301,8 +431,32 @@ Order ID: <?php echo $order_id; ?>
 
 <div id="upi" class="section">
 
-Enter UPI ID
-<input type="text" name="upi_id" placeholder="example@upi">
+    <div class="upi-tabs">
+        <div class="upi-tab active" onclick="showUpiTab('upi_qr', this)">Scan QR</div>
+        <div class="upi-tab" onclick="showUpiTab('upi_id_box', this)">Enter UPI ID</div>
+    </div>
+
+    <!-- QR CODE SECTION -->
+    <div id="upi_qr" class="upi-content active">
+        <p style="font-size:14px; color:#555;">Scan with any UPI App</p>
+        <div class="qr-box">
+            <img src="<?php echo $qr_url; ?>" alt="UPI QR Code">
+        </div>
+        <p style="font-size:16px; font-weight:bold;">₹<?php echo number_format($total,2); ?></p>
+        
+        <div class="upi-apps">
+            <div class="upi-app" style="background:#ea4335; color:white;">GPay</div>
+            <div class="upi-app" style="background:#5f259f; color:white;">PhonePe</div>
+            <div class="upi-app" style="background:#00baf2; color:white;">Paytm</div>
+        </div>
+    </div>
+    
+    <!-- UPI ID SECTION -->
+    <div id="upi_id_box" class="upi-content" style="text-align:left;">
+        <p style="margin-bottom:10px;">Enter your Virtual Payment Address (VPA)</p>
+        <input type="text" name="upi_id" placeholder="example@okhdfcbank">
+        <p style="font-size:12px; color:#777; margin-top:10px;">A payment request will be sent to this UPI ID.</p>
+    </div>
 
 </div>
 
