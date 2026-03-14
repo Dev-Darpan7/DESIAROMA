@@ -127,6 +127,7 @@ nav ul li a:hover{
     display: none;
     flex-direction: column;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .profile-wrapper.open .profile-dropdown {
@@ -144,24 +145,32 @@ nav ul li a:hover{
 
 .dd-menu {
     list-style: none;
-    padding: 8px 0;
+    padding: 5px 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .dd-menu li {
     padding: 0;
     margin: 0;
+    display: block;
+    width: 100%;
 }
 
 .dd-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 15px;
+    padding: 12px 20px;
     text-decoration: none;
     color: #ccc;
     font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .dd-item:hover {
@@ -179,6 +188,8 @@ nav ul li a:hover{
     color: #ff6b6b;
     font-size: 14px;
     font-weight: 600;
+    width: 100%;
+    box-sizing: border-box;
     transition: 0.2s;
 }
 
