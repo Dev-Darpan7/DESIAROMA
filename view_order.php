@@ -12,7 +12,7 @@ $user_id = intval($_SESSION['user_id']);
 $order_id = intval($_GET['id'] ?? 0);
 
 if($order_id == 0){
-    header("Location: orders.php");
+    header("Location: profile.php?tab=orders");
     exit();
 }
 
@@ -185,14 +185,14 @@ body { background: #080808; font-family: 'Inter', sans-serif; color: #ccc; }
     <nav>
         <ul>
             <li><a href="index.php">Home</a></li>
-            <li><a href="orders.php">My Orders</a></li>
+            <li><a href="profile.php?tab=orders">My Orders</a></li>
         </ul>
     </nav>
 </header>
 
 <div class="order-page">
 
-    <a href="orders.php" class="back-link">← Back to My Orders</a>
+    <a href="profile.php?tab=orders" class="back-link">← Back to My Orders</a>
 
     <div class="order-header">
         <div class="order-title">Order <span>#<?php echo $order_id; ?></span></div>
