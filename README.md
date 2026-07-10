@@ -192,16 +192,6 @@ Contributions are welcome.
 4. Push your branch.
 5. Open a Pull Request.
 
----
 
-## 📄 License
-
-This project is intended for educational and portfolio purposes.
-
----
-
-## 👨‍💻 Author
-
-**Darpan**
 
 GitHub: https://github.com/Dev-Darpan7
