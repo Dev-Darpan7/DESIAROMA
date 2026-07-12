@@ -1,4 +1,4 @@
-# 🌸 DESIAROMA
+#  DESIAROMA
 
 DESIAROMA is a responsive e-commerce website for discovering and purchasing perfumes and fragrances. Built using **PHP, MySQL, JavaScript, HTML, and CSS**, the project provides a complete online shopping experience with user authentication, cart management, order processing, and an admin panel for managing the store.
 
